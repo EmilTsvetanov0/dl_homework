@@ -18,7 +18,8 @@ _INTENT_MAP = {
     'MEDICAL': 1,
     'PERSONAL': 2,
     'VENTURE': 3,
-    'DEBTCONSOLIDATION': 4
+    'DEBTCONSOLIDATION': 4,
+    'HOMEIMPROVEMENT': 5
 }
 
 _GRADE_MAP = {
@@ -26,7 +27,9 @@ _GRADE_MAP = {
     'B': 1,
     'C': 2,
     'D': 3,
-    'E': 4
+    'E': 4,
+    'F': 5,
+    'G': 6,
 }
 
 _CB_PERSON_DEFAULT_MAP = {
@@ -56,7 +59,7 @@ class LoanDataset(Dataset):
     def __getitem__(self, item: int) -> dict[str, dict[str | Tensor] | Tensor]:
         item = self._data.iloc[item]
         return {
-            'target': torch.scalar_tensor(item['loan_status'], dtype=torch.long),
+            'target': torch.scalar_tensor(item['loan_status'], dtype=torch.float32),
             'cat_features': {
                 'person_home_ownership': torch.scalar_tensor(_HOME_MAP[item['person_home_ownership']], dtype=torch.long),
                 'loan_intent': torch.scalar_tensor(_INTENT_MAP[item['loan_intent']], dtype=torch.long),
