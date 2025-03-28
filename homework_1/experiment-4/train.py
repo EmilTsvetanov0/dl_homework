@@ -23,15 +23,19 @@ def _map_to_device(batch: dict, dev: torch.device) -> dict:
 
 
 
-def train(train_dataset: Dataset, eval_dataset: Dataset):
+def train(
+        train_dataset: Dataset,
+        eval_dataset: Dataset,
+        n_epochs: int = 15,
+        lr: float = 0.01,
+        base_hidden_size: int = 128,
+        dropout_p: float = 0.2,
+        batch_size: int = 64,
+        seed: int = 42,
+        weight_decay: float = 0.01
+):
     dev = torch.device('cuda:0')
-    n_epochs = 15
-    lr = 0.01
-    base_hidden_size = 128
-    dropout_p = 0.2
-    batch_size = 32
-    seed = 42
-    weight_decay = 0.01
+
 
     torch.random.manual_seed(seed)
 
@@ -42,8 +46,9 @@ def train(train_dataset: Dataset, eval_dataset: Dataset):
     model = LoanModel(hidden_size=base_hidden_size, dropout_p=dropout_p).to(dev)
     optimizer = SGD(model.parameters(), lr=lr, weight_decay=weight_decay)
 
-    run = Run(experiment='123')
+    run = Run(experiment=f"dropout_{dropout_p}")
     run["hparams"] = {
+        "dropout_p": dropout_p,
         "learning_rate": lr,
         "base_hidden_size": base_hidden_size,
         "batch_size": batch_size,
@@ -97,4 +102,9 @@ def train(train_dataset: Dataset, eval_dataset: Dataset):
 
 if __name__ == '__main__':
     train_ds, test_ds = load_loan_data(Path('/home/shovel/PycharmProjects/dl_homework/homework_1/train_loan.csv'))
-    train(train_ds, test_ds)
+
+    dropout_values = [0.01, 0.1, 0.2, 0.5, 0.9]
+
+    for dropout_p in dropout_values:
+        print(f"\n=== Training with dropout_p={dropout_p} ===")
+        train(train_ds, test_ds, dropout_p=dropout_p)
