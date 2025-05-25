@@ -1,0 +1,31 @@
+{
+  "trainer": {
+    "seed": 42,
+    "gradient_accumulation_steps": 8,
+    "num_epochs": 1,
+    "project_dir": "/home/shovel/PycharmProjects/dl_homework/homework_3/task_4",
+    "optimizer": {
+      "optimizer": "adamw",
+      "weight_decay": 0.01,
+      "learning_rate": 0.00005
+    },
+    "scheduler": {
+      "schedule": "linear_warmup",
+      "warmup_steps_proportion": 0.1
+    },
+    "experiment_name": "retrieval-first",
+    "minibatch_size": 4,
+    "shuffle_train_dataset": false,
+    "num_workers": 4,
+    "log_steps": 10,
+    "eval_steps": 100,
+    "save_steps": 100,
+    "log_with": "aim"
+  },
+  "max_length": 512,
+  "base_model": "intfloat/multilingual-e5-base",
+  "dataset": "sentence-transformers/natural-questions",
+  "query_prefix": "query: ",
+  "document_prefix": "passage: ",
+  "similarity_margin": 0.2
+}
